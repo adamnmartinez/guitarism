@@ -7,10 +7,8 @@ import {
   collection,
   doc,
   updateDoc,
-  DocumentData,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { render } from "react-dom";
 
 const Profile = () => {
   const goto = useNavigate();
@@ -86,8 +84,13 @@ const Profile = () => {
       <NavBar></NavBar>
       <p>
         {auth.currentUser
-          ? `Signed In: ${auth.currentUser.email}`
+          ? `Signed in: ${auth.currentUser.email}`
           : "Not Signed In."}
+      </p>
+      <p>
+        {auth.currentUser
+          ? `Author Name: ${auth.currentUser.displayName}`
+          : ""}
       </p>
       {!auth.currentUser ? (
         <Link to="/auth">

@@ -56,6 +56,10 @@ const Auth = () => {
   };
 
   const register = async () => {
+    if(email.length == 0 || password.length == 0) {
+      setMessage('You need a non-empty email and password to register')
+      return
+    }
     try {
       await createUserWithEmailAndPassword(auth, email, password).then(() => {
         goto("/profile");
@@ -97,10 +101,8 @@ const Auth = () => {
       ></input>{" "}
       <br></br>
       <p>{message}</p>
-      <button onClick={authenticate}>Sign in</button> or{" "}
-      <button onClick={register}>Register</button> <br></br>
-      <hr></hr>
-      <button onClick={authenticate_google}> Sign in with Google</button>
+      <button onClick={authenticate}>Sign in</button> |{" "}
+      <button onClick={register}>Register</button> | <button onClick={authenticate_google}> Sign in with Google</button>
     </div>
   );
 };

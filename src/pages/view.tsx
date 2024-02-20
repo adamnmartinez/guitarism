@@ -2,7 +2,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import NavBar from "../components/navbar";
 import { ReactElement, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
-import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 
 const usersRef = collection(db, "users");
 const tabsRef = collection(db, "tabs");
@@ -86,6 +86,18 @@ const View = () => {
     goto("/create");
   };
 
+  const handleDelete = async (e: any) => {
+    e.preventDefault();
+    //@ts-ignore
+    await deleteDoc(doc(tabsRef, tab_id))
+    goto("/");
+
+  };
+
+  const handleListen = async (e: any) => {
+    e.preventDefault()
+  }
+
   const remove = async (e: any, tab_id: string) => {
     e.preventDefault();
     if (auth.currentUser) {
@@ -109,17 +121,26 @@ const View = () => {
   return (
     <>
       <NavBar></NavBar>
-      {tabData.name} by {tabData.author}
-      <br></br>
-      BPM: {tabData.bpm}, Capo {tabData.capo > 0 ? tabData.capo : "None"}
+      <h2>"{tabData.name}" by <i>{tabData.author}</i></h2>
+      <h3>BPM: {tabData.bpm}, Capo {tabData.capo > 0 ? tabData.capo : "None"}</h3>
       <br></br>
       <button
         onClick={isSaved ? (e) => remove(e, tab_id) : (e) => handleSave(e)}
       >
         {isSaved ? "Remove from Profile" : "Save to Profile"}
       </button>{" "}
-      <button onClick={(e) => handleEdit(e)}>Edit this Tab</button>{" "}
-      <button>Listen</button>
+      <button onClick={(e) => handleEdit(e)}>Copy tab to editor</button>{" "}
+      <button onClick={(e) => handleListen(e)}>Listen {">"}</button>
+      <hr></hr>
+      {auth.currentUser ? (
+        auth.currentUser.uid == tabData.author_id ? (
+          <button onClick={(e) => handleDelete(e)} >Delete</button>
+        ) : (
+          ""
+        )
+      ) : (
+        ""
+      )}
       <hr></hr>
       {columns}
     </>

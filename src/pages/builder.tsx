@@ -69,7 +69,7 @@ const Builder = () => {
     saveTab();
 
     //Debug
-    console.log(tab);
+    //console.log(tab);
   };
 
   const renderTabs = async () => {
@@ -292,7 +292,7 @@ const Builder = () => {
       // Create a document for this tab and assign a unique ID
       let tabID = uuid();
 
-      await setDoc(doc(tabsRef, tabID), saveTab());
+      await setDoc(doc(tabsRef, tabID), saveTab()).then(() => goto(`/view/${tabID}`))
 
       // Get authenticated user document and update saved tabs
       let document = await getDoc(doc(usersRef, auth.currentUser.uid));
@@ -303,6 +303,8 @@ const Builder = () => {
       await updateDoc(doc(usersRef, auth.currentUser.uid), {
         saved: saved,
       });
+
+      
     } else {
       // If user isn't authenticated send them to log in page.
       goto("/auth");
@@ -313,6 +315,7 @@ const Builder = () => {
     let data = {
       name: name,
       author: auth.currentUser ? auth.currentUser.displayName : "Unknown",
+      author_id: auth.currentUser ? auth.currentUser.uid : "Unknown",
       bpm: BPM,
       capo: capo,
       tablature: tab,
@@ -331,6 +334,13 @@ const Builder = () => {
       <NavBar></NavBar>
       Tablature in the editor is automatically cached into local web storage.
       <br></br>
+      <button
+        onClick={(e) => {
+          handlePost(e);
+        }}
+      >
+        Post to Guitarism
+      </button> |
       <button>
         <a
           href={`data:text/json;charset=utf-8,${encodeURIComponent(
@@ -338,18 +348,12 @@ const Builder = () => {
           )}`}
           download="tab.json"
         >
-          {`Download`}
+          {`Download JSON`}
         </a>
-      </button>
-      <button
-        onClick={(e) => {
-          handlePost(e);
-        }}
-      >
-        Post
-      </button>
+      </button> |
+      
       <button>
-        Upload |{" "}
+        Upload JSON: {" "}
         <input type="file" onChange={(e) => handleFileUpload(e)}></input>
       </button>
       <hr></hr>
