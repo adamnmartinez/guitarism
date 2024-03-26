@@ -3,6 +3,7 @@ import NavBar from "../components/navbar";
 import { ReactElement, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { play } from "./builder";
 
 const usersRef = collection(db, "users");
 const tabsRef = collection(db, "tabs");
@@ -14,6 +15,7 @@ const View = () => {
   const [tabData, setTabData] = useState(Object);
   const [columns, setColumns] = useState<ReactElement[]>([]);
   const [isSaved, setIsSaved] = useState(false);
+  const [playing, setPlaying] = useState(false)
 
   const renderTabs = async () => {
     //@ts-ignore
@@ -33,7 +35,7 @@ const View = () => {
       const elements: any[] = [];
       data.tablature.forEach((col: any) => {
         elements.push(
-          <button>
+          <button className="tablature">
             {col.e2 >= 0 ? col.e2 : "-"}
             <br></br>
             {col.b >= 0 ? col.b : "-"}
@@ -96,6 +98,12 @@ const View = () => {
 
   const handleListen = async (e: any) => {
     e.preventDefault()
+    //console.log(tabData.tablature, tabData.bpm)
+    setPlaying(true); // Disable play button temporarily
+    let k = play(tabData.tablature, tabData.bpm)
+    setTimeout(() => {
+      setPlaying(false); // Enable play button
+    }, k * 1000);
   }
 
   const remove = async (e: any, tab_id: string) => {
@@ -130,7 +138,9 @@ const View = () => {
         {isSaved ? "Remove from Profile" : "Save to Profile"}
       </button>{" "}
       <button onClick={(e) => handleEdit(e)}>Copy tab to editor</button>{" "}
-      <button onClick={(e) => handleListen(e)}>Listen {">"}</button>
+      <button disabled={playing} onClick={(e) => handleListen(e)}>
+        {playing ? "Playing" : "Listen >"}
+      </button>
       <hr></hr>
       {auth.currentUser ? (
         auth.currentUser.uid == tabData.author_id ? (
