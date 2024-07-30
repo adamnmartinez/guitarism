@@ -4,7 +4,7 @@ const NavBar = () => {
   return (
     <>
       <h1>Guitarism</h1>
-      <p>by Adam Martinez</p>
+      <p>by <a href="https://github.com/adamnmartinez">Adam Martinez</a></p>
       <hr></hr>
       <Link to="/">
         <button>Home</button>
