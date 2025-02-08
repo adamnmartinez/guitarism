@@ -337,31 +337,35 @@ const Builder = () => {
   return (
     <>
       <NavBar></NavBar>
-      Tablature in the editor is automatically cached into local web storage.
+      <h1>Welcome to the tab builder!</h1>
+      <h3>Work in the editor is automatically saved</h3>
       <br></br>
-      <button
-        onClick={(e) => {
-          handlePost(e);
-        }}
-      >
-        Post to Guitarism
-      </button> |
-      <button>
-        <a
-          href={`data:text/json;charset=utf-8,${encodeURIComponent(
-            JSON.stringify(saveTab()),
-          )}`}
-          download="tab.json"
+      <div className="shareBlock">
+        <h3>SHARE</h3>
+        <button
+          onClick={(e) => {
+            handlePost(e);
+          }}
         >
-          {`Download JSON`}
-        </a>
-      </button> |
-      
-      <button>
-        Upload JSON: {" "}
-        <input type="file" onChange={(e) => handleFileUpload(e)}></input>
-      </button>
-      <hr></hr>
+          Post to Guitarism
+        </button>
+        <button>
+          <a
+            href={`data:text/json;charset=utf-8,${encodeURIComponent(
+              JSON.stringify(saveTab()),
+            )}`}
+            download="tab.json"
+          >
+            {`Download JSON`}
+          </a>
+        </button>
+        <button>
+          From JSON: {" "}
+          <input type="file" onChange={(e) => handleFileUpload(e)}></input>
+        </button>
+        
+      </div>
+      <br></br>
       {columns}
       <hr></hr>
       Tab Name=

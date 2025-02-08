@@ -13,6 +13,10 @@ import { useEffect, useState } from "react";
 const Profile = () => {
   const goto = useNavigate();
 
+  if (!auth.currentUser) {
+    goto('/auth')
+  }
+
   const [usertracks, setUserTracks] = useState<React.ReactElement[]>([]);
 
   const usersRef = collection(db, "users");

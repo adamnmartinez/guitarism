@@ -40,7 +40,7 @@ function Home() {
       let tab: any = d.data();
       const component = (
         <li>
-          <button onClick={() => goto(`/view/${d.id}`)}>
+          <button className="tabList" onClick={() => goto(`/view/${d.id}`)}>
             <p>
               "{tab.name}" by <i>{tab.author}</i>
             </p>
@@ -60,7 +60,7 @@ function Home() {
     <>
       <NavBar></NavBar>
       <form>
-        <input placeholder="Search" type="text" onChange={search}></input>
+        <input className="searchBar" placeholder="Search" type="text" onChange={search}></input>
       </form>
       <ul className="trackList">{results}</ul>
     </>

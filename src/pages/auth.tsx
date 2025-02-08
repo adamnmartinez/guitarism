@@ -83,8 +83,10 @@ const Auth = () => {
   };
 
   return (
-    <div>
+    <div className="auth">
       <NavBar></NavBar>
+      <h1>Welcome to Guitarism</h1>
+      <h2>Log in or create an account to start making music!</h2>
       <input
         placeholder="Email"
         onChange={(e) => {
