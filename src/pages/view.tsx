@@ -3,7 +3,8 @@ import NavBar from "../components/navbar";
 import { ReactElement, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { play } from "./builder";
+import { play } from "../components/player";
+import * as Tone from "tone";
 
 const usersRef = collection(db, "users");
 const tabsRef = collection(db, "tabs");
@@ -138,7 +139,14 @@ const View = () => {
         {isSaved ? "Remove from Profile" : "Save to Profile"}
       </button>{" "}
       <button onClick={(e) => handleEdit(e)}>Copy tab to editor</button>{" "}
-      <button disabled={playing} onClick={(e) => handleListen(e)}>
+      <button disabled={playing} onClick={async (e) => {
+        if (playing) {
+          //TODO: Add audio stop function
+        } else {
+          await Tone.start()
+          handleListen(e)
+        }
+      }}>
         {playing ? "Playing" : "Listen >"}
       </button>
       <hr></hr>
