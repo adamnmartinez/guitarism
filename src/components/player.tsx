@@ -1,18 +1,8 @@
 import * as Tone from "tone";
+//@ts-ignore
+import GuitarAcousticMp3 from 'tonejs-instrument-guitar-acoustic-mp3';
 
-// const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-
-const synth = new Tone.Sampler({
-	urls: {
-		C4: "C4.mp3",
-		"D#4": "Ds4.mp3",
-		"F#4": "Fs4.mp3",
-		A4: "A4.mp3",
-	},
-	release: 1,
-	//baseUrl: "https://nbrosowsky.github.io/tonejs-instruments/samples/guitar-acoustic/",
-    baseUrl: "https://tonejs.github.io/audio/salamander/",
-}).toDestination();
+const synth = new GuitarAcousticMp3().toDestination();
 
 // Tone.loaded().then(() => {
 // 	synth.triggerAttackRelease(["Eb4", "G4", "Bb4"], 4);
@@ -106,7 +96,7 @@ const play = (tab: any, BPM: number) => {
   let k = 0;
   for (let col = 0; col < series.length; col++) {
     for (let n = 0; n < series[col].length; n++) {
-      synth.triggerAttackRelease(series[col][n], "16n", Tone.now() + k);
+      synth.triggerAttackRelease(series[col][n], "4n", Tone.now() + k);
     }
 
     k += 60 / BPM;

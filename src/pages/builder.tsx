@@ -6,7 +6,6 @@ import { v4 as uuid } from "uuid";
 import { auth, db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { play } from "../components/player"
-import { start } from "tone";
 
 const Builder = () => {
   let empty_tab = [

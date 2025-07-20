@@ -76,7 +76,6 @@ body {
   padding: 0px;
   padding-bottom: 10%;
   margin: 0px;
-  margin-bottom: 20px;
   width: 100%;
   background-image: linear-gradient(180deg, var(--background-header), var(--background-color) 100%);
 }

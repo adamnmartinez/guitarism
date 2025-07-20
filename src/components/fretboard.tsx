@@ -1,7 +1,8 @@
 import * as Tone from "tone";
+//@ts-ignore
+import GuitarAcousticMp3 from 'tonejs-instrument-guitar-acoustic-mp3';
 
-const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-
+const synth = new GuitarAcousticMp3().toDestination();
 const notes = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"];
 
 const Fretboard = (props: any) => {
@@ -23,7 +24,7 @@ const Fretboard = (props: any) => {
           // Play Sound
           synth.triggerAttackRelease(
             props.note + props.octave,
-            "8n",
+            "4n",
             Tone.now(),
           );
           // Write Note to Tab
