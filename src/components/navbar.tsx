@@ -3,8 +3,12 @@ import { Link } from "react-router-dom";
 const NavBar = () => {
   return (
     <div className="navigation">
-      <h1>Guitarism</h1>
-      <p>by <a href="https://github.com/adamnmartinez">Adam Martinez</a></p>
+      <div className="title">
+        <p><i>Welcome to...</i></p>
+        <h1>Guitarism</h1>
+        <p>by <i><a href="https://github.com/adamnmartinez">Adam Martinez</a></i>.</p>
+      </div>
+      
       <Link to="/">
         <button className="home">Home</button>
       </Link>

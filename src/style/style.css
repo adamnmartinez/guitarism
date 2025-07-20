@@ -1,0 +1,119 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  --button-color: #1a1a1a;
+  --button-light: rgb(128, 206, 99);
+  --button-hover: rgb(63, 63, 63);
+  --background-color: #242424;
+  --background-header: rgb(97, 97, 97);
+  text-align: center;
+  /* color-scheme: light dark; */
+  color: rgb(255, 255, 255);
+  background-color: var(--background-color);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: block;
+  min-width: 1000px;
+  min-height: 100vh;
+}
+
+.home ul {
+  list-style: none;
+  padding: 0px;
+  width: 80%;
+  left: 0px;
+  right: 0px;
+  display: inline-block;
+}
+.home input {
+  width: 25%;
+  transition: width 500ms;
+  color: white;
+  background-color: var(--button-color);
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  border-style: solid;
+  border-color: var(--button-hover);
+  border-radius: 20px;
+}
+.home input:focus {
+  border-color: var(--button-hover);
+  width: 80%;
+}
+.home li {
+  padding: 50px;
+  padding-left: 6px;
+  padding-right: 6px;
+  margin-bottom: 10px;
+  background-color: var(--button-color);
+  transition: background-color 700ms;
+  border-style: solid;
+  border-radius: 20px;
+  border-width: 2px;
+  border-color: var(--button-hover);
+}
+.home li button {
+  margin: 5px;
+  width: 100%;
+  background-color: inherit;
+  border-style: none;
+  color: white;
+}
+.home li:hover {
+  background-color: var(--button-hover);
+}
+
+.navigation {
+  padding: 0px;
+  padding-bottom: 10%;
+  margin: 0px;
+  margin-bottom: 20px;
+  width: 100%;
+  background-image: linear-gradient(180deg, var(--background-header), var(--background-color) 100%);
+}
+.navigation .title {
+  padding-top: 200px;
+  padding: 100px;
+}
+.navigation .title h1 {
+  margin: 0px;
+  font-size: 75px;
+}
+.navigation .title p {
+  margin: 0px;
+}
+.navigation a {
+  transition: color 750ms;
+  color: white;
+  text-decoration: none;
+}
+.navigation a:hover {
+  color: rgb(230, 128, 128);
+}
+.navigation button {
+  transition: color 250ms;
+  transition: background-color 250ms;
+  background-color: var(--button-color);
+  color: white;
+  width: 20%;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: inline-block;
+  padding: 20px;
+  border-style: none;
+  border-color: var(--button-hover);
+  border-radius: 10px;
+}
+.navigation button:hover {
+  background-color: white;
+  color: var(--button-color);
+}/*# sourceMappingURL=style.css.map */
