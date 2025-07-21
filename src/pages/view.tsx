@@ -3,7 +3,7 @@ import NavBar from "../components/navbar";
 import { ReactElement, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { play } from "../components/player";
+import { play, stopPlayback } from "../utilities.tsx/player";
 import * as Tone from "tone";
 
 const usersRef = collection(db, "users");
@@ -17,6 +17,7 @@ const View = () => {
   const [columns, setColumns] = useState<ReactElement[]>([]);
   const [isSaved, setIsSaved] = useState(false);
   const [playing, setPlaying] = useState(false)
+  const [tuning, setTuning] = useState<string[]>(["E", "A", "D", "G", "B", "E"])
 
   const renderTabs = async () => {
     //@ts-ignore
@@ -37,17 +38,17 @@ const View = () => {
       data.tablature.forEach((col: any) => {
         elements.push(
           <button className="tablature">
-            {col.e2 >= 0 ? col.e2 : "-"}
+            {col[5] >= 0 ? col[5] : "-"}
             <br></br>
-            {col.b >= 0 ? col.b : "-"}
+            {col[4] >= 0 ? col[4] : "-"}
             <br></br>
-            {col.g >= 0 ? col.g : "-"}
+            {col[3] >= 0 ? col[4] : "-"}
             <br></br>
-            {col.d >= 0 ? col.d : "-"}
+            {col[2] >= 0 ? col[2] : "-"}
             <br></br>
-            {col.a >= 0 ? col.a : "-"}
+            {col[1] >= 0 ? col[1] : "-"}
             <br></br>
-            {col.e1 >= 0 ? col.e1 : "-"}
+            {col[0] >= 0 ? col[0] : "-"}
             <br></br>
           </button>,
         );
@@ -101,10 +102,16 @@ const View = () => {
     e.preventDefault()
     //console.log(tabData.tablature, tabData.bpm)
     setPlaying(true); // Disable play button temporarily
-    let k = play(tabData.tablature, tabData.bpm)
+    let k = play(tuning, parseInt(tabData.capo), tabData.tablature, tabData.bpm)
     setTimeout(() => {
       setPlaying(false); // Enable play button
     }, k * 1000);
+  }
+
+  const handleStopMusic = async (e: any) => {
+    e.preventDefault()
+    setPlaying(false)
+    stopPlayback()
   }
 
   const remove = async (e: any, tab_id: string) => {
@@ -130,7 +137,7 @@ const View = () => {
   return (
     <>
       <NavBar></NavBar>
-      <h2>"{tabData.name}" by <i>{tabData.author}</i></h2>
+      <h2>"{tabData.name}" uploaded by <i>{tabData.author}</i></h2>
       <h3>BPM: {tabData.bpm}, Capo {tabData.capo > 0 ? tabData.capo : "None"}</h3>
       <br></br>
       <button
@@ -141,13 +148,13 @@ const View = () => {
       <button onClick={(e) => handleEdit(e)}>Copy tab to editor</button>{" "}
       <button disabled={playing} onClick={async (e) => {
         if (playing) {
-          //TODO: Add audio stop function
+          handleStopMusic(e)
         } else {
           await Tone.start()
           handleListen(e)
         }
       }}>
-        {playing ? "Playing" : "Listen >"}
+        {playing ? "Stop" : "Listen"}
       </button>
       <hr></hr>
       {auth.currentUser ? (

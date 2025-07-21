@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import * as Tone from "tone";
 //@ts-ignore
 import GuitarAcousticMp3 from 'tonejs-instrument-guitar-acoustic-mp3';
@@ -5,22 +6,44 @@ import GuitarAcousticMp3 from 'tonejs-instrument-guitar-acoustic-mp3';
 const synth = new GuitarAcousticMp3().toDestination();
 const notes = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"];
 
-const Fretboard = (props: any) => {
-  const writeNote = (val: number, s: string) => {
+const Fretboard = (props: {
+  write: Function
+  renderTabs: Function
+  handleTuning: Function
+  tuning: string[]
+  capo: number
+}) => {
+  const capoSetting = props.capo
+
+  const writeNote = (val: number, s: number) => {
     props.write(val, s);
     props.renderTabs();
   };
 
-  const Fret = (props: any) => {
+  const handleTuningSelect = (e: ChangeEvent, s: number) => {
+    e.preventDefault()
+    let target = e.currentTarget as HTMLInputElement
+    props.handleTuning(target.value, s)
+  }
+
+  const Fret = (props: {
+    note: string
+    stringNumber: number
+    octave: number
+    val: number
+    displayNote: string
+  }) => {
+
     return (
       <button
         onClick={() => {
-          // Log fret data
+          // DEBUG Log fret data
           console.log(
-            props.note + props.octave,
-            `[${props.string}]`,
-            `- ${props.val}`,
+            `Note ${props.note + props.octave}`,
+            `[String ${props.stringNumber}]`,
+            `- Fret Value ${props.val}`, `- Displayed As ${props.displayNote}`
           );
+          
           // Play Sound
           synth.triggerAttackRelease(
             props.note + props.octave,
@@ -28,39 +51,90 @@ const Fretboard = (props: any) => {
             Tone.now(),
           );
           // Write Note to Tab
-          writeNote(props.val, props.string);
+          writeNote(props.val, props.stringNumber);
         }}
         className="note"
       >
-        {props.note}
+        {props.displayNote}
       </button>
     );
   };
 
-  const String = (props: any) => {
+  const String = (props: {
+    startNote: string,
+    startOctave: number,
+    snum: number
+  }) => {
     const frets: any[] = [];
-    let oct = props.octave;
+
+    frets.push(
+      <select 
+        defaultValue={props.startNote}
+        className="tuningSelect"
+        onChange={(e) => {handleTuningSelect(e, props.snum)}}
+      >
+        <option value={"A"}>A</option>
+        <option value={"A#"}>A#</option>
+        <option value={"B"}>B</option>
+        <option value={"C"}>C</option>
+        <option value={"C#"}>C#</option>
+        <option value={"D"}>D</option>
+        <option value={"D#"}>D#</option>
+        <option value={"E"}>E</option>
+        <option value={"F"}>F</option>
+        <option value={"F#"}>F#</option>
+        <option value={"G"}>G</option>
+        <option value={"G#"}>G#</option>
+        
+      </select>
+    );
+
+    let oct = props.startOctave;
+    if (capoSetting >= 12) oct++
+
+    // Counter for the "Display Note"
     let k = notes.indexOf(props.startNote);
-    let s =
-      props.startNote != "E" ? props.startNote : props.octave == 4 ? "e" : "E";
-    for (let i = 0; i < 13; i++) {
-      if (notes[k] == "C") oct++;
-      frets.push(<Fret octave={oct} note={notes[k]} string={s} val={i}></Fret>);
-      k++;
-      if (k > 11) k = 0;
+    
+    // Counter for the "True Note" (note + capo)
+    let j = k
+
+    if (capoSetting > 0) {
+      j += capoSetting
+
+      // If capo offset goes off fretboard, 
+      while (j >= notes.length) {
+        j = j % notes.length
+      }
     }
-    frets.push(<button onClick={() => writeNote(-1, s)}>X</button>);
+    
+    // For each fret up to 12, make a button
+    for (let i = 0; i < 12; i++) {
+
+      // If we loop back to C, up the octave.
+      if (notes[j] == "C") oct++;
+
+      frets.push(<Fret octave={oct} displayNote={notes[k]} note={notes[j]} stringNumber={props.snum} val={i}></Fret>);
+
+      j = j + 1
+      k = k + 1
+      if (k >= notes.length) k = 0;
+      if (j >= notes.length) j = 0;
+    }
+
+    // Add "X" button at end
+    frets.push(<button className="noteClearBtn" onClick={() => writeNote(-1, props.snum)}>X</button>);
+
     return frets;
   };
 
   return (
     <>
-      <String startNote="E" octave="4"></String> <br></br>
-      <String startNote="B" octave="3"></String> <br></br>
-      <String startNote="G" octave="3"></String> <br></br>
-      <String startNote="D" octave="3"></String> <br></br>
-      <String startNote="A" octave="2"></String> <br></br>
-      <String startNote="E" octave="2"></String> <br></br>
+      <String startNote={props.tuning[5]} startOctave={4} snum={5}></String> <br></br>
+      <String startNote={props.tuning[4]} startOctave={3} snum={4}></String> <br></br>
+      <String startNote={props.tuning[3]} startOctave={3} snum={3}></String> <br></br>
+      <String startNote={props.tuning[2]} startOctave={3} snum={2}></String> <br></br>
+      <String startNote={props.tuning[1]} startOctave={2} snum={1}></String> <br></br>
+      <String startNote={props.tuning[0]} startOctave={2} snum={0}></String> <br></br>
     </>
   );
 };

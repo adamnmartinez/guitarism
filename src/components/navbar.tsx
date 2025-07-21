@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
+import { stopPlayback } from "../utilities.tsx/player";
 
 const NavBar = () => {
+  const handleNavigate = () => {
+    stopPlayback()
+  }
+
+
   return (
     <div className="navigation">
       <div className="title">
@@ -10,16 +16,16 @@ const NavBar = () => {
       </div>
       
       <Link to="/">
-        <button className="home">Home</button>
+        <button className="home" onClick={handleNavigate}>Home</button>
       </Link>
       <Link to="/create">
-        <button className="create" name="create">Create +</button>
+        <button className="create" name="create" onClick={handleNavigate}>Create +</button>
       </Link>
       <Link to="/auth">
-        <button className="login">Log In</button>
+        <button className="login" onClick={handleNavigate}>Log In</button>
       </Link>
       <Link to="/profile">
-        <button className="profile">Profile</button>
+        <button className="profile" onClick={handleNavigate}>Profile</button>
       </Link>
       <br></br>
     </div>
