@@ -8,6 +8,8 @@
   --background-color: #242424;
   --background-header: rgb(97, 97, 97);
   text-align: center;
+  align-items: center;
+  align-content: center;
   /* color-scheme: light dark; */
   color: rgb(255, 255, 255);
   background-color: var(--background-color);
@@ -24,6 +26,9 @@ body {
   min-height: 100vh;
 }
 
+.home {
+  margin-top: 500px;
+}
 .home ul {
   list-style: none;
   padding: 0px;
@@ -33,6 +38,7 @@ body {
   display: inline-block;
 }
 .home input {
+  margin-top: 25px;
   width: 25%;
   transition: width 500ms;
   color: white;
@@ -76,7 +82,11 @@ body {
   padding: 0px;
   padding-bottom: 10%;
   margin: 0px;
-  width: 100%;
+  min-width: 100%;
+  height: 600px;
+  top: 0;
+  z-index: -10;
+  position: absolute;
   background-image: linear-gradient(180deg, var(--background-header), var(--background-color) 100%);
 }
 .navigation .title {
@@ -98,12 +108,15 @@ body {
 .navigation a:hover {
   color: rgb(230, 128, 128);
 }
+.navigation .navBtnFlex {
+  width: 100%;
+}
 .navigation button {
+  width: 15%;
   transition: color 250ms;
   transition: background-color 250ms;
   background-color: var(--button-color);
   color: white;
-  width: 20%;
   margin-left: 5px;
   margin-right: 5px;
   display: inline-block;
@@ -115,4 +128,146 @@ body {
 .navigation button:hover {
   background-color: white;
   color: var(--button-color);
+}
+
+.builder {
+  margin-top: 500px;
+}
+.builder .shareBlock {
+  margin-left: 25%;
+  margin-right: 25%;
+}
+.builder .shareBlock .shareFlex {
+  display: flex;
+  flex-direction: row;
+}
+.builder .shareBlock .shareFlex button {
+  flex: 1 1 auto;
+  background-color: var(--button-color);
+  border-style: solid;
+  border-color: var(--button-hover);
+  border-radius: 10px;
+  color: white;
+  padding: 10px;
+  transition: background-color 250ms;
+}
+.builder .shareBlock .shareFlex button a {
+  text-decoration: none;
+  color: white;
+}
+.builder .shareBlock .shareFlex button.postBtn {
+  margin-right: 5px;
+}
+.builder .shareBlock .shareFlex button.exportBtn {
+  margin-left: 5px;
+}
+.builder .shareBlock .shareFlex button:hover {
+  background-color: var(--button-hover);
+}
+.builder .shareBlock button.importBtn {
+  background-color: var(--button-color);
+  border-style: solid;
+  border-color: var(--button-hover);
+  border-radius: 10px;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  transition: background-color 250ms;
+}
+.builder .shareBlock button.importBtn:hover {
+  background-color: var(--button-hover);
+}
+.builder .columns {
+  margin-left: 30%;
+  margin-right: 30%;
+}
+.builder .tabColumn {
+  background-color: var(--background-color);
+  border-style: none;
+  border-radius: 5px;
+  color: white;
+  margin-bottom: 15px;
+}
+.builder .tabColumn:hover {
+  background-color: var(--button-hover);
+}
+.builder .tabColumn.selectedTab {
+  background-color: var(--button-hover);
+}
+.builder .builderUtils .builderUtilBtn {
+  background-color: var(--background-color);
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--button-hover);
+  color: white;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.builder .builderUtils .builderUtilBtn:hover {
+  background-color: var(--button-hover);
+}
+.builder .builderUtils .builderUtilBtn.playing {
+  background-color: rgb(255, 80, 80);
+  color: black;
+}
+.builder .builderUtils .builderUtilBtn.listen {
+  background-color: rgb(80, 255, 80);
+  color: black;
+}
+.builder .settings {
+  margin-top: 20px;
+}
+.builder .settings .builderSettings {
+  background-color: var(--background-color);
+  color: white;
+  border-radius: 5px;
+  border-color: var(--button-hover);
+  border-width: 2px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-style: solid;
+}
+.builder .builderUtils {
+  margin-left: 5px;
+}
+
+.auth {
+  margin-top: 500px;
+}
+
+.profile {
+  margin-top: 500px;
+}
+
+.fretboard .note {
+  background-color: var(--button-color);
+  color: white;
+  width: 30px;
+  height: 20px;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-style: solid;
+  border-color: var(--button-hover);
+  transition: background-color 150ms;
+}
+.fretboard .note:hover {
+  background-color: white;
+  color: black;
+}
+.fretboard .noteClearBtn {
+  background-color: var(--button-color);
+  margin-left: 5px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: var(--button-hover);
+  color: white;
+}
+.fretboard .noteClearBtn:hover {
+  background-color: red;
+}
+.fretboard .tuningSelect {
+  background-color: var(--button-hover);
+  color: white;
+  border-style: none;
 }/*# sourceMappingURL=style.css.map */

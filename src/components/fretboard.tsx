@@ -68,7 +68,7 @@ const Fretboard = (props: {
     const frets: any[] = [];
 
     frets.push(
-      <select 
+      <select key={'S'}
         defaultValue={props.startNote}
         className="tuningSelect"
         onChange={(e) => {handleTuningSelect(e, props.snum)}}
@@ -113,7 +113,7 @@ const Fretboard = (props: {
       // If we loop back to C, up the octave.
       if (notes[j] == "C") oct++;
 
-      frets.push(<Fret octave={oct} displayNote={notes[k]} note={notes[j]} stringNumber={props.snum} val={i}></Fret>);
+      frets.push(<Fret key={i} octave={oct} displayNote={notes[k]} note={notes[j]} stringNumber={props.snum} val={i}></Fret>);
 
       j = j + 1
       k = k + 1
@@ -122,20 +122,20 @@ const Fretboard = (props: {
     }
 
     // Add "X" button at end
-    frets.push(<button className="noteClearBtn" onClick={() => writeNote(-1, props.snum)}>X</button>);
+    frets.push(<button key={'X'} className="noteClearBtn" onClick={() => writeNote(-1, props.snum)}>X</button>);
 
     return frets;
   };
 
   return (
-    <>
+    <div className="fretboard">
       <String startNote={props.tuning[5]} startOctave={4} snum={5}></String> <br></br>
       <String startNote={props.tuning[4]} startOctave={3} snum={4}></String> <br></br>
       <String startNote={props.tuning[3]} startOctave={3} snum={3}></String> <br></br>
       <String startNote={props.tuning[2]} startOctave={3} snum={2}></String> <br></br>
       <String startNote={props.tuning[1]} startOctave={2} snum={1}></String> <br></br>
       <String startNote={props.tuning[0]} startOctave={2} snum={0}></String> <br></br>
-    </>
+    </div>
   );
 };
 

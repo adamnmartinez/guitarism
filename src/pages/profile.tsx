@@ -84,7 +84,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <>
+    <div className="profile">
       <NavBar></NavBar>
       <p>
         {auth.currentUser
@@ -106,7 +106,7 @@ const Profile = () => {
       <hr></hr>
       <p>Saved Tabs:</p>
       <ul>{usertracks.length != 0 ? usertracks : "No saved tracks"}</ul>
-    </>
+    </div>
   );
 };
 

@@ -15,18 +15,20 @@ const NavBar = () => {
         <p>by <i><a href="https://github.com/adamnmartinez">Adam Martinez</a></i>.</p>
       </div>
       
-      <Link to="/">
-        <button className="home" onClick={handleNavigate}>Home</button>
-      </Link>
-      <Link to="/create">
-        <button className="create" name="create" onClick={handleNavigate}>Create +</button>
-      </Link>
-      <Link to="/auth">
-        <button className="login" onClick={handleNavigate}>Log In</button>
-      </Link>
-      <Link to="/profile">
-        <button className="profile" onClick={handleNavigate}>Profile</button>
-      </Link>
+      <div className="navBtnFlex">
+        <Link to="/">
+          <button className="homeBtn" onClick={handleNavigate}>Home</button>
+        </Link>
+        <Link to="/create">
+          <button className="createBtn" name="create" onClick={handleNavigate}>Create +</button>
+        </Link>
+        <Link to="/auth">
+          <button className="loginBtn" onClick={handleNavigate}>Log In</button>
+        </Link>
+        <Link to="/profile">
+          <button className="profileBtn" onClick={handleNavigate}>Profile</button>
+        </Link>
+      </div>
       <br></br>
     </div>
   );

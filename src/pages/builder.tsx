@@ -51,7 +51,7 @@ const Builder = () => {
     let cols = [];
     for (let i = 0; i < tab.length; i++) {
       cols.push(
-        <button className="tabColumn" onClick={() => selectTab(i)} key={i}>
+        <button className={selectedTab == i ? "tabColumn selectedTab" : "tabColumn"} onClick={() => selectTab(i)} key={i}>
           {tab[i][5] >= 0 ? tab[i][5]: "-"}
           <br></br>
           {tab[i][4] >= 0 ? tab[i][4] : "-"}
@@ -70,8 +70,9 @@ const Builder = () => {
     setColumns(cols);
   };
 
-  const selectTab = async (i: number) => {
+  const selectTab = (i: number) => {
     setSelectedTab(i);
+    renderTabs();
   };
 
   const addTabColumn = async () => {
@@ -99,6 +100,9 @@ const Builder = () => {
 
   const clear = async () => {
     setTab([empty_tab]);
+    setName("")
+    setCapo(0)
+    setBPM(120)
     selectTab(0);
     await renderTabs();
     saveTab()
@@ -213,9 +217,9 @@ const Builder = () => {
   };
 
   useEffect(() => {
-    if (saved) selectTab(tab.length - 1);
+    //if (saved) selectTab(tab.length - 1);
     renderTabs();
-  }, [tab]);
+  }, [tab, selectedTab]);
 
   return (
     <div className="builder">
@@ -224,72 +228,79 @@ const Builder = () => {
       <h3>Work in the editor is automatically saved</h3>
       <br></br>
       <div className="shareBlock">
-        <h3>SHARE</h3>
-        <button
-          className="shareUtilBtn postBtn"
-          onClick={(e) => {
-            handlePost(e);
-          }}
-        >
-          Post to Guitarism
-        </button>
-        <button>
-          <a
-            href={`data:text/json;charset=utf-8,${encodeURIComponent(
-              JSON.stringify(saveTab()),
-            )}`}
-            download={`${name}.json`}
-            className="shareUtilBtn exportBtn"
+        <div className="shareFlex">
+          <button
+            className="shareUtilBtn postBtn"
+            onClick={(e) => {
+              handlePost(e);
+            }}
           >
-            {`Download JSON`}
-          </a>
-        </button>
+            Post to Guitarism
+          </button>
+          <button>
+            <a
+              href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                JSON.stringify(saveTab()),
+              )}`}
+              download={`${name}.json`}
+              className="shareUtilBtn exportBtn"
+            >
+              {`Download as JSON`}
+            </a>
+          </button>
+        </div>
+        <br></br>
         <button className="shareUtilBtn importBtn">
-          From JSON: {" "}
-          <input type="file" onChange={(e) => handleFileUpload(e)}></input>
+          Import JSON File - {""}
+          <input className="fileUpload" type="file" onChange={(e) => handleFileUpload(e)}></input>
         </button>
-        
+      </div>
+      <div className="settings">
+        Tab Name:
+        <input
+          className="builderSettings"
+          onChange={(e) => {
+            handleName(e);
+          }}
+          placeholder="Tab Name"
+          defaultValue={name}
+        ></input>
+        Capo:
+        <input
+          onChange={(e) => {
+            handleCapo(e);
+          }}
+          className="builderSettings"
+          type="number"
+          min={0}
+          max={12}
+          placeholder="Capo"
+          defaultValue={capo}
+        ></input>
+        BPM: 
+        <input
+          className="builderSettings"
+          placeholder="BPM"
+          type="number"
+          onChange={(e) => {
+            handleBPM(e);
+          }}
+          defaultValue={BPM}
+        ></input>
       </div>
       <br></br>
-      {columns}
-      <hr></hr>
-      Tab Name=
-      <input
-        onChange={(e) => {
-          handleName(e);
-        }}
-        placeholder="Name"
-        defaultValue={name}
-      ></input>
-      Capo=
-      <input
-        onChange={(e) => {
-          handleCapo(e);
-        }}
-        type="number"
-        min={0}
-        max={12}
-        placeholder="Capo"
-        defaultValue={capo}
-      ></input>
-      BPM=
-      <input
-        placeholder="BPM"
-        type="number"
-        onChange={(e) => {
-          handleBPM(e);
-        }}
-        defaultValue={BPM}
-      ></input>
+      <div className="columns">{columns}</div>
       <br></br>
-      <button className="builderUtilBtn" onClick={() => addTabColumn()}>Add Space</button>
-      <button className="builderUtilBtn" onClick={() => delTabColumn()}>Delete Column</button>
-      <button className="builderUtilBtn" onClick={() => clear()}>Clear</button>
-      <button className="builderUtilBtn" onClick={() => setTuning(defaultTuning)}>Reset Tuning</button>
-      <button className={playing ? "builderUtilBtn playing" : "builderUtilBtn"} onClick={() => playing ? stopTabAudio() : playTabAudio()}>
-        {playing ? "Stop" : "Listen"}
-      </button>
-      <hr></hr>
+      <div className="builderUtils">
+        <button className="builderUtilBtn" onClick={() => addTabColumn()}>Add Space</button>
+        <button className="builderUtilBtn" onClick={() => delTabColumn()}>Delete Column</button>
+        <button className="builderUtilBtn" onClick={() => clear()}>Clear</button>
+        <button className="builderUtilBtn" onClick={() => setTuning(defaultTuning)}>Reset Tuning</button>
+        <button className={playing ? "builderUtilBtn playing" : "builderUtilBtn listen"} onClick={() => playing ? stopTabAudio() : playTabAudio()}>
+          {playing ? "Stop" : "Listen"}
+        </button>
+      </div>
+      <br></br>
       <Fretboard capo={parseInt(capo)} handleTuning={handleTuning} tuning={tuning} write={writeToTab} renderTabs={renderTabs}></Fretboard>
     </div>
   );
