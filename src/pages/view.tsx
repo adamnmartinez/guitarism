@@ -3,7 +3,7 @@ import NavBar from "../components/navbar";
 import { ReactElement, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { play } from "../components/player";
+import { play, stopPlayback } from "../utilities.tsx/player";
 import * as Tone from "tone";
 
 const usersRef = collection(db, "users");
@@ -17,11 +17,15 @@ const View = () => {
   const [columns, setColumns] = useState<ReactElement[]>([]);
   const [isSaved, setIsSaved] = useState(false);
   const [playing, setPlaying] = useState(false)
+  const [tab, setTab] = useState<number[][]>([])
 
   const renderTabs = async () => {
     //@ts-ignore
     let document = await getDoc(doc(tabsRef, tab_id));
     let data = document.data();
+
+    console.log(data)
+
     if (data) {
       if (auth.currentUser) {
         let document = await getDoc(doc(usersRef, auth.currentUser.uid));
@@ -32,22 +36,32 @@ const View = () => {
           }
         }
       }
+
       setTabData(data);
+      
+      let saved_tab = data.tablature
+      let unpacked = []
+      for (let i = 0; i < saved_tab.length; i += 6) {
+        unpacked.push(saved_tab.slice(i, i + 6))
+      }
+
+      setTab(unpacked)
+
       const elements: any[] = [];
-      data.tablature.forEach((col: any) => {
+      unpacked.forEach((col: any) => {
         elements.push(
           <button className="tablature">
-            {col.e2 >= 0 ? col.e2 : "-"}
+            {col[5] >= 0 ? col[5] : "-"}
             <br></br>
-            {col.b >= 0 ? col.b : "-"}
+            {col[4] >= 0 ? col[4] : "-"}
             <br></br>
-            {col.g >= 0 ? col.g : "-"}
+            {col[3] >= 0 ? col[3] : "-"}
             <br></br>
-            {col.d >= 0 ? col.d : "-"}
+            {col[2] >= 0 ? col[2] : "-"}
             <br></br>
-            {col.a >= 0 ? col.a : "-"}
+            {col[1] >= 0 ? col[1] : "-"}
             <br></br>
-            {col.e1 >= 0 ? col.e1 : "-"}
+            {col[0] >= 0 ? col[0] : "-"}
             <br></br>
           </button>,
         );
@@ -86,6 +100,7 @@ const View = () => {
     let document = await getDoc(doc(tabsRef, tab_id));
     let data = document.data();
     localStorage.setItem("savedTab", JSON.stringify(data));
+    stopPlayback()
     goto("/create");
   };
 
@@ -93,6 +108,7 @@ const View = () => {
     e.preventDefault();
     //@ts-ignore
     await deleteDoc(doc(tabsRef, tab_id))
+    stopPlayback()
     goto("/");
 
   };
@@ -101,10 +117,16 @@ const View = () => {
     e.preventDefault()
     //console.log(tabData.tablature, tabData.bpm)
     setPlaying(true); // Disable play button temporarily
-    let k = play(tabData.tablature, tabData.bpm)
+    let k = play(tabData.tuning, parseInt(tabData.capo), tab, tabData.bpm)
     setTimeout(() => {
       setPlaying(false); // Enable play button
     }, k * 1000);
+  }
+
+  const handleStopMusic = async (e: any) => {
+    e.preventDefault()
+    setPlaying(false)
+    stopPlayback()
   }
 
   const remove = async (e: any, tab_id: string) => {
@@ -128,40 +150,45 @@ const View = () => {
   }, []);
 
   return (
-    <>
+    <div className="view">
       <NavBar></NavBar>
-      <h2>"{tabData.name}" by <i>{tabData.author}</i></h2>
+      <h2>"{tabData.name}" uploaded by <i>{tabData.author}</i></h2>
       <h3>BPM: {tabData.bpm}, Capo {tabData.capo > 0 ? tabData.capo : "None"}</h3>
+      <h4>Tuning: {""}
+        {tabData.tuning}
+      </h4>
       <br></br>
-      <button
-        onClick={isSaved ? (e) => remove(e, tab_id) : (e) => handleSave(e)}
-      >
-        {isSaved ? "Remove from Profile" : "Save to Profile"}
-      </button>{" "}
-      <button onClick={(e) => handleEdit(e)}>Copy tab to editor</button>{" "}
-      <button disabled={playing} onClick={async (e) => {
-        if (playing) {
-          //TODO: Add audio stop function
-        } else {
-          await Tone.start()
-          handleListen(e)
-        }
-      }}>
-        {playing ? "Playing" : "Listen >"}
-      </button>
-      <hr></hr>
+      <div className="utilBtn">
+        <button
+          onClick={isSaved ? (e) => remove(e, tab_id) : (e) => handleSave(e)}
+        >
+          {isSaved ? "Remove from Profile" : "Save to Profile"}
+        </button>{" "}
+        <button onClick={(e) => handleEdit(e)}>Copy tab to editor</button>{" "}
+        <button className={playing ? "stopBtn" : "playBtn"} onClick={async (e) => {
+          if (playing) {
+            handleStopMusic(e)
+          } else {
+            await Tone.start()
+            handleListen(e)
+          }
+        }}>
+          {playing ? "Stop" : "Listen"}
+        </button>
+      </div>
+      <br></br>
       {auth.currentUser ? (
         auth.currentUser.uid == tabData.author_id ? (
-          <button onClick={(e) => handleDelete(e)} >Delete</button>
+          <button className="deleteBtn" onClick={(e) => handleDelete(e)} >Delete Tab</button>
         ) : (
           ""
         )
       ) : (
         ""
       )}
-      <hr></hr>
-      {columns}
-    </>
+      <br></br>
+      <div className="columns">{columns}</div>
+    </div>
   );
 };
 

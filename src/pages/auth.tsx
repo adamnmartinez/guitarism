@@ -103,8 +103,11 @@ const Auth = () => {
       ></input>{" "}
       <br></br>
       <p>{message}</p>
-      <button onClick={authenticate}>Sign in</button> |{" "}
-      <button onClick={register}>Register</button> | <button onClick={authenticate_google}> Sign in with Google</button>
+      <div className="utils">
+        <button onClick={authenticate}>Sign in</button>
+        <button onClick={register}>Register</button>
+        <button onClick={authenticate_google}> Sign in with Google</button>
+        </div>
     </div>
   );
 };

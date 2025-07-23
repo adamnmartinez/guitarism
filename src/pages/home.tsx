@@ -11,10 +11,18 @@ import {
 import NavBar from "../components/navbar";
 import { useNavigate } from "react-router-dom";
 
+const searchPhrases = [
+  "What's on your mind?",
+  "Ask and you shall receive...",
+  "Find your favorite songs!",
+  "I'm all ears!"
+]
+
 const tabsRef = collection(db, "tabs");
 
 function Home() {
   const [results, setResults] = useState<ReactElement[]>([]);
+  const [phrase, setPhrase] = useState<string>("");
   const goto = useNavigate();
 
   async function search(e?: ChangeEvent) {
@@ -54,16 +62,17 @@ function Home() {
 
   useEffect(() => {
     search();
+    setPhrase(searchPhrases[Math.floor(Math.random() * searchPhrases.length)]);
   }, []);
 
   return (
-    <>
+    <div className="home">
       <NavBar></NavBar>
       <form>
-        <input className="searchBar" placeholder="Search" type="text" onChange={search}></input>
+        <input className="searchBar" placeholder={phrase} type="text" onChange={search}></input>
       </form>
       <ul className="trackList">{results}</ul>
-    </>
+    </div>
   );
 }
 
