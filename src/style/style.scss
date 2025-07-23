@@ -22,9 +22,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-file-upload-button {
-   //display: none;
-}
+// ::-webkit-file-upload-button {
+//    //display: none;
+// }
 
 body {
   margin: 0;
@@ -297,10 +297,97 @@ body {
 
 .auth {
     margin-top: 500px;
+
+    input {
+        background-color: var(--background-color);
+        border-style: solid;
+        border-radius: 5px;
+        padding: 10px;
+        color: white;
+        border-color: var(--button-hover);
+        width: 33%;
+        margin-left: 20%;
+        margin-right: 20%;
+        margin-bottom: 5px;
+    }
+
+    .utils {
+        button {
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 10px;
+        background-color: var(--background-color);
+        border-color: var(--button-hover);
+        border-style: solid;
+        border-radius: 5px;
+        color: white;
+        width: 10%;
+
+        transition: background-color 250ms;
+
+        &:hover {
+            background-color: var(--button-hover);
+        }
+    }
+    }
 }
 
 .profile {
     margin-top: 500px;
+
+    .logoutBtn {
+        width: 33%;
+        margin-left: 20px;
+        margin-right: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        border-color: var(--button-hover);
+        background-color: var(--background-color);
+        color:white;
+        border-style: solid;
+        transition: background-color 250ms;
+
+        &:hover {
+            background-color: var(--button-hover);
+        }
+    }
+
+    .trackList {
+        margin-top: 50px;
+
+        ul {
+            padding: 0;
+            list-style: none;
+
+            button {
+                width: 30%;
+                padding: 10px;
+                margin-bottom: 10px;
+                margin-right: 5px;
+                background-color: var(--background-color);
+                border-radius: 5px;
+                border-style: solid;
+                border-width: 2px;
+                border-color: var(--button-hover);
+                color:white;
+
+                transition: background-color 250ms;
+
+                &:hover {
+                    background-color: var(--button-hover);
+                }
+            }
+
+            .removeTrackBtn {
+                width: 5%;
+
+                &:hover {
+                    background-color: red;
+                }
+            }
+        }
+    }
+
 }
 
 .fretboard {

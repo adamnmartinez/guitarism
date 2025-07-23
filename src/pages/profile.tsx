@@ -36,7 +36,7 @@ const Profile = () => {
                   <button onClick={() => goto(`/view/${track_id}`)}>
                     "{doc.data().name}" by <i>{doc.data().author}</i>
                   </button>
-                  <button onClick={() => remove(track_id)}> X </button>{" "}
+                  <button className="removeTrackBtn" onClick={() => remove(track_id)}> X </button>{" "}
                   <br></br>
                 </>,
               );
@@ -101,11 +101,13 @@ const Profile = () => {
           <button>Click here to Log In</button>
         </Link>
       ) : (
-        <button onClick={logout}>Log Out</button>
+        <button className="logoutBtn" onClick={logout}>Log Out</button>
       )}
-      <hr></hr>
-      <p>Saved Tabs:</p>
-      <ul>{usertracks.length != 0 ? usertracks : "No saved tracks"}</ul>
+      <br></br>
+      <div className="trackList">
+        <p>Saved Tabs:</p>
+        <ul>{usertracks.length != 0 ? usertracks : "No saved tracks"}</ul>
+      </div>
     </div>
   );
 };
