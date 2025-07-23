@@ -17,8 +17,15 @@ const Builder = () => {
   const [name, setName] = useState(!saved ? "" : JSON.parse(saved).name);
   const [capo, setCapo] = useState(!saved ? 0 : JSON.parse(saved).capo);
   const [playing, setPlaying] = useState(false);
-  const [tab, setTab] = useState(
-    !saved ? [ empty_tab ] : JSON.parse(saved).tablature,
+  const [tab, setTab] = useState<number[][]>(() => {
+      if (!saved) return [ empty_tab ]
+      let saved_tab = JSON.parse(saved).tablature
+      let unpacked = []
+      for (let i = 0; i < saved_tab.length; i += 6) {
+        unpacked.push(saved_tab.slice(i, i + 6))
+      }
+      return unpacked
+    }
   );
   const [tuning, setTuning] = useState(!saved ? defaultTuning : JSON.parse(saved).tuning)
   const goto = useNavigate();
@@ -209,7 +216,7 @@ const Builder = () => {
       author_id: auth.currentUser ? auth.currentUser.uid : "Unknown",
       bpm: BPM,
       capo: capo,
-      tablature: tab,
+      tablature: tab.flat(),
       tuning: tuning,
     };
     localStorage.setItem("savedTab", JSON.stringify(data));

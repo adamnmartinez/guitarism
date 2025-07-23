@@ -17,12 +17,15 @@ const View = () => {
   const [columns, setColumns] = useState<ReactElement[]>([]);
   const [isSaved, setIsSaved] = useState(false);
   const [playing, setPlaying] = useState(false)
-  const [tuning, setTuning] = useState<string[]>(["E", "A", "D", "G", "B", "E"])
+  const [tab, setTab] = useState<number[][]>([])
 
   const renderTabs = async () => {
     //@ts-ignore
     let document = await getDoc(doc(tabsRef, tab_id));
     let data = document.data();
+
+    console.log(data)
+
     if (data) {
       if (auth.currentUser) {
         let document = await getDoc(doc(usersRef, auth.currentUser.uid));
@@ -33,16 +36,26 @@ const View = () => {
           }
         }
       }
+
       setTabData(data);
+      
+      let saved_tab = data.tablature
+      let unpacked = []
+      for (let i = 0; i < saved_tab.length; i += 6) {
+        unpacked.push(saved_tab.slice(i, i + 6))
+      }
+
+      setTab(unpacked)
+
       const elements: any[] = [];
-      data.tablature.forEach((col: any) => {
+      unpacked.forEach((col: any) => {
         elements.push(
           <button className="tablature">
             {col[5] >= 0 ? col[5] : "-"}
             <br></br>
             {col[4] >= 0 ? col[4] : "-"}
             <br></br>
-            {col[3] >= 0 ? col[4] : "-"}
+            {col[3] >= 0 ? col[3] : "-"}
             <br></br>
             {col[2] >= 0 ? col[2] : "-"}
             <br></br>
@@ -87,6 +100,7 @@ const View = () => {
     let document = await getDoc(doc(tabsRef, tab_id));
     let data = document.data();
     localStorage.setItem("savedTab", JSON.stringify(data));
+    stopPlayback()
     goto("/create");
   };
 
@@ -94,6 +108,7 @@ const View = () => {
     e.preventDefault();
     //@ts-ignore
     await deleteDoc(doc(tabsRef, tab_id))
+    stopPlayback()
     goto("/");
 
   };
@@ -102,7 +117,7 @@ const View = () => {
     e.preventDefault()
     //console.log(tabData.tablature, tabData.bpm)
     setPlaying(true); // Disable play button temporarily
-    let k = play(tuning, parseInt(tabData.capo), tabData.tablature, tabData.bpm)
+    let k = play(tabData.tuning, parseInt(tabData.capo), tab, tabData.bpm)
     setTimeout(() => {
       setPlaying(false); // Enable play button
     }, k * 1000);
@@ -135,40 +150,45 @@ const View = () => {
   }, []);
 
   return (
-    <>
+    <div className="view">
       <NavBar></NavBar>
       <h2>"{tabData.name}" uploaded by <i>{tabData.author}</i></h2>
       <h3>BPM: {tabData.bpm}, Capo {tabData.capo > 0 ? tabData.capo : "None"}</h3>
+      <h4>Tuning: {""}
+        {tabData.tuning}
+      </h4>
       <br></br>
-      <button
-        onClick={isSaved ? (e) => remove(e, tab_id) : (e) => handleSave(e)}
-      >
-        {isSaved ? "Remove from Profile" : "Save to Profile"}
-      </button>{" "}
-      <button onClick={(e) => handleEdit(e)}>Copy tab to editor</button>{" "}
-      <button disabled={playing} onClick={async (e) => {
-        if (playing) {
-          handleStopMusic(e)
-        } else {
-          await Tone.start()
-          handleListen(e)
-        }
-      }}>
-        {playing ? "Stop" : "Listen"}
-      </button>
-      <hr></hr>
+      <div className="utilBtn">
+        <button
+          onClick={isSaved ? (e) => remove(e, tab_id) : (e) => handleSave(e)}
+        >
+          {isSaved ? "Remove from Profile" : "Save to Profile"}
+        </button>{" "}
+        <button onClick={(e) => handleEdit(e)}>Copy tab to editor</button>{" "}
+        <button className={playing ? "stopBtn" : "playBtn"} onClick={async (e) => {
+          if (playing) {
+            handleStopMusic(e)
+          } else {
+            await Tone.start()
+            handleListen(e)
+          }
+        }}>
+          {playing ? "Stop" : "Listen"}
+        </button>
+      </div>
+      <br></br>
       {auth.currentUser ? (
         auth.currentUser.uid == tabData.author_id ? (
-          <button onClick={(e) => handleDelete(e)} >Delete</button>
+          <button className="deleteBtn" onClick={(e) => handleDelete(e)} >Delete Tab</button>
         ) : (
           ""
         )
       ) : (
         ""
       )}
-      <hr></hr>
-      {columns}
-    </>
+      <br></br>
+      <div className="columns">{columns}</div>
+    </div>
   );
 };
 

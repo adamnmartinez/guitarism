@@ -44,7 +44,7 @@ const interpretNoteByValue = (startNote: string, startOctave: number, val: numbe
 };
 
 const play = (tuning: Array<string>, capo: number, tab: any, BPM: number) => {
-  let series: string[][] = [];
+  let series: string[][] = [];  
 
   for (let i = 0; i < tab.length; i++) {
     Tone.getTransport().start()
